@@ -128,7 +128,8 @@ function LanguageSwitcher({ language, setLanguage }) {
 
 function AppShell({ language, setLanguage }) {
   const location = useLocation()
-  const current = location.pathname === '/' ? 'home' : location.pathname.replace('/', '')
+  const relativePath = location.pathname.replace(/^\/CV_02/, '') || '/'
+  const current = relativePath === '/' ? 'home' : relativePath.replace(/^\/+/, '')
   const navLabels = localeText[language].nav
 
   return (
@@ -151,7 +152,7 @@ function AppShell({ language, setLanguage }) {
 
 function App() {
   const [language, setLanguage] = useState(defaultLanguage)
-  const basename = import.meta.env.DEV ? '/' : '/CV_02'
+  const basename = import.meta.env.PROD ? '/CV_02' : undefined
 
   return (
     <BrowserRouter basename={basename}>

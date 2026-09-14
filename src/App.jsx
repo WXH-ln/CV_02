@@ -152,7 +152,7 @@ function AppShell({ language, setLanguage }) {
 
 function App() {
   const [language, setLanguage] = useState(defaultLanguage)
-  const basename = import.meta.env.PROD ? '/CV_02' : undefined
+  const basename = typeof window !== 'undefined' && window.location.pathname.startsWith('/CV_02') ? '/CV_02' : '/'
 
   return (
     <BrowserRouter basename={basename}>

@@ -6,11 +6,6 @@ import { SectionPage } from './components/SectionPage'
 import { FloatingNav } from './components/FloatingNav'
 import { LANGUAGE_OPTIONS, defaultLanguage, localeText, sectionMeta } from './data/siteData'
 
-function getLocalizedLabel(meta, language) {
-  if (typeof meta.label === 'string') return meta.label
-  return meta.label[language] ?? meta.label.en
-}
-
 function AboutPage({ language }) {
   const text = localeText[language] ?? localeText.en
 
@@ -59,8 +54,6 @@ function ExperiencePage({ language }) {
 }
 
 function ProjectsPage({ language }) {
-  const text = localeText[language] ?? localeText.en
-
   return (
     <SectionPage meta={sectionMeta.projects} language={language}>
       <div className="section-content project-grid">
@@ -151,7 +144,7 @@ function AppShell({ language, setLanguage }) {
         <Route path="/contact" element={<ContactPage language={language} />} />
       </Routes>
 
-      <FloatingNav current={current} language={language} labels={navLabels} />
+      <FloatingNav current={current} labels={navLabels} />
     </div>
   )
 }

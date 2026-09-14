@@ -3,15 +3,17 @@ import { Link } from 'react-router-dom'
 import { homeEntries, localeText } from '../data/siteData'
 import { WaveBackground } from './WaveBackground'
 
+const createLightSet = () => [
+  { className: 'dynamic-light-one', left: `${8 + Math.random() * 8}%`, top: `${10 + Math.random() * 10}%`, size: `${540 + Math.random() * 160}px`, delay: '0s' },
+  { className: 'dynamic-light-two', left: `${46 + Math.random() * 16}%`, top: `${42 + Math.random() * 18}%`, size: `${640 + Math.random() * 180}px`, delay: '1.3s' },
+  { className: 'dynamic-light-three', left: `${66 + Math.random() * 14}%`, top: `${18 + Math.random() * 16}%`, size: `${560 + Math.random() * 200}px`, delay: '2.1s' },
+  { className: 'dynamic-light-four', left: `${20 + Math.random() * 18}%`, top: `${60 + Math.random() * 16}%`, size: `${700 + Math.random() * 220}px`, delay: '3.2s' },
+  { className: 'dynamic-light-five', left: `${58 + Math.random() * 20}%`, top: `${68 + Math.random() * 12}%`, size: `${620 + Math.random() * 180}px`, delay: '4.1s' },
+]
+
 export function HomeScreen({ language }) {
   const [pointer, setPointer] = useState({ x: 0, y: 0 })
-  const [lights] = useState([
-    { className: 'dynamic-light-one', left: `${8 + Math.random() * 8}%`, top: `${10 + Math.random() * 10}%`, size: `${540 + Math.random() * 160}px`, delay: '0s' },
-    { className: 'dynamic-light-two', left: `${46 + Math.random() * 16}%`, top: `${42 + Math.random() * 18}%`, size: `${640 + Math.random() * 180}px`, delay: '1.3s' },
-    { className: 'dynamic-light-three', left: `${66 + Math.random() * 14}%`, top: `${18 + Math.random() * 16}%`, size: `${560 + Math.random() * 200}px`, delay: '2.1s' },
-    { className: 'dynamic-light-four', left: `${20 + Math.random() * 18}%`, top: `${60 + Math.random() * 16}%`, size: `${700 + Math.random() * 220}px`, delay: '3.2s' },
-    { className: 'dynamic-light-five', left: `${58 + Math.random() * 20}%`, top: `${68 + Math.random() * 12}%`, size: `${620 + Math.random() * 180}px`, delay: '4.1s' },
-  ])
+  const [lights] = useState(createLightSet)
 
   const entries = homeEntries[language] ?? homeEntries.en
   const text = localeText[language] ?? localeText.en

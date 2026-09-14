@@ -9,7 +9,7 @@ const navPaths = [
   { key: 'contact', path: '/contact' },
 ]
 
-export function FloatingNav({ current, language, labels }) {
+export function FloatingNav({ current, labels }) {
   const activeIndex = navPaths.findIndex((item) => item.key === current)
 
   return (

@@ -151,9 +151,10 @@ function AppShell({ language, setLanguage }) {
 
 function App() {
   const [language, setLanguage] = useState(defaultLanguage)
+  const basename = import.meta.env.DEV ? '/' : '/CV_02'
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <AppShell language={language} setLanguage={setLanguage} />
     </BrowserRouter>
   )

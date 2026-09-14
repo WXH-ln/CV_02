@@ -733,8 +733,11 @@
   }
 
   .language-switcher {
-    left: 14px;
-    bottom: 14px;
+    left: auto;
+    right: 16px;
+    bottom: auto;
+    top: 16px;
+    padding: 5px 6px;
   }
 
   .floating-nav {

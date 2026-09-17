@@ -1,10 +1,47 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 import { HomeScreen } from './components/HomeScreen'
 import { SectionPage } from './components/SectionPage'
 import { FloatingNav } from './components/FloatingNav'
 import { LANGUAGE_OPTIONS, defaultLanguage, localeText, sectionMeta } from './data/siteData'
+
+const PAGE_ORDER = ['/', '/about', '/experience', '/projects', '/portfolio', '/contact']
+
+function normalizePath(pathname) {
+  const normalized = pathname.replace(/^\/CV_02/, '') || '/'
+  return normalized === '' ? '/' : normalized
+}
+
+function getPageTitle(pathname, language) {
+  const normalized = normalizePath(pathname)
+
+  if (normalized === '/') {
+    return localeText[language]?.nav.home ?? 'HOME'
+  }
+
+  const routeKey = Object.keys(sectionMeta).find((key) => sectionMeta[key].path === normalized)
+  const meta = routeKey ? sectionMeta[routeKey] : null
+
+  if (!meta) return localeText[language]?.nav.home ?? 'HOME'
+
+  const label = typeof meta.label === 'string' ? meta.label : meta.label[language] ?? meta.label.en
+  return label
+}
+
+function RouteTransitionOverlay({ transition }) {
+  if (!transition) return null
+
+  return (
+    <div className={`route-transition ${transition.direction}`} aria-hidden="true">
+      <div className="route-transition-glow" />
+      <div className="route-transition-content">
+        <span className="route-transition-kicker">{transition.kicker}</span>
+        <span className="route-transition-title">{transition.title}</span>
+      </div>
+    </div>
+  )
+}
 
 function AboutPage({ language }) {
   const text = localeText[language] ?? localeText.en
@@ -128,12 +165,44 @@ function LanguageSwitcher({ language, setLanguage }) {
 
 function AppShell({ language, setLanguage }) {
   const location = useLocation()
-  const relativePath = location.pathname.replace(/^\/CV_02/, '') || '/'
+  const prevPathRef = useRef(null)
+  const [transition, setTransition] = useState(null)
+
+  const relativePath = normalizePath(location.pathname)
   const current = relativePath === '/' ? 'home' : relativePath.replace(/^\/+/, '')
   const navLabels = localeText[language].nav
 
+  useEffect(() => {
+    const prev = prevPathRef.current
+    const next = relativePath
+
+    if (!prev || prev === next) {
+      prevPathRef.current = next
+      return
+    }
+
+    const prevIndex = PAGE_ORDER.indexOf(prev)
+    const nextIndex = PAGE_ORDER.indexOf(next)
+    const direction = nextIndex > prevIndex ? 'right' : 'left'
+    const title = getPageTitle(next, language)
+
+    setTransition({
+      direction,
+      title,
+      kicker: next === '/' ? localeText[language]?.nav.home ?? 'HOME' : title,
+    })
+
+    const timeoutId = window.setTimeout(() => {
+      setTransition(null)
+    }, 980)
+
+    prevPathRef.current = next
+    return () => window.clearTimeout(timeoutId)
+  }, [language, relativePath])
+
   return (
     <div className="app-shell">
+      <RouteTransitionOverlay transition={transition} />
       <LanguageSwitcher language={language} setLanguage={setLanguage} />
 
       <Routes>

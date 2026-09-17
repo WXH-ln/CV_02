@@ -12,7 +12,7 @@ const createLightSet = () => [
 ]
 
 export function HomeScreen({ language }) {
-  const [pointer, setPointer] = useState({ x: 0, y: 0 })
+  const [pointer, setPointer] = useState({ x: 0, y: 0, tiltX: 0, tiltY: 0 })
   const [lights] = useState(createLightSet)
 
   const entries = homeEntries[language] ?? homeEntries.en
@@ -21,9 +21,14 @@ export function HomeScreen({ language }) {
   useEffect(() => {
     const handleMove = (event) => {
       const { innerWidth, innerHeight } = window
-      const x = (event.clientX / innerWidth - 0.5) * 26
-      const y = (event.clientY / innerHeight - 0.5) * 18
-      setPointer({ x, y })
+      const x = (event.clientX / innerWidth - 0.5) * 52
+      const y = (event.clientY / innerHeight - 0.5) * 38
+      setPointer({
+        x,
+        y,
+        tiltX: y * 1.8,
+        tiltY: x * 1.8,
+      })
     }
 
     window.addEventListener('pointermove', handleMove)
@@ -31,7 +36,15 @@ export function HomeScreen({ language }) {
   }, [])
 
   return (
-    <main className="page home-page" style={{ '--pointer-x': `${pointer.x}px`, '--pointer-y': `${pointer.y}px` }}>
+    <main
+      className="page home-page"
+      style={{
+        '--pointer-x': `${pointer.x}px`,
+        '--pointer-y': `${pointer.y}px`,
+        '--tilt-x': `${pointer.tiltX}deg`,
+        '--tilt-y': `${pointer.tiltY}deg`,
+      }}
+    >
       <WaveBackground active="home" />
       <div className="grain-overlay" aria-hidden="true" />
       {lights.map((light) => (
